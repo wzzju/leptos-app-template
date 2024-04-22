@@ -7,6 +7,15 @@
 
 This is a template for use with the [Leptos](https://github.com/leptos-rs/leptos) web framework and the [cargo-leptos](https://github.com/akesson/cargo-leptos) tool.
 
+## Run CMD
+
+```shell
+# generate css
+npx tailwindcss -i ./input.css -o ./style/output.css --watch
+# build app
+cargo leptos watch
+```
+
 ## Creating your template repo
 
 If you don't have `cargo-leptos` installed you can install it with

@@ -8,8 +8,6 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-        // injects a stylesheet into the document <head>
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/leptos-app-template.css"/>
 
         // sets the document title
@@ -32,11 +30,29 @@ pub fn App() -> impl IntoView {
 fn HomePage() -> impl IntoView {
     // Creates a reactive value to update the button
     let (count, set_count) = create_signal(0);
-    let on_click = move |_| set_count.update(|count| *count += 1);
+    let decrement = move |_| set_count.update(|value| *value -= 1);
+    let increment = move |_| set_count.update(|value| *value += 1);
 
     view! {
-        <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
+        <div class="container flex items-center mt-20 flex-col">
+            <h1 class="text-blue-400">"Welcome to Leptos!"</h1>
+            <span class="text-pink-300">"Value: [" {move || count().to_string()} "]"</span>
+            <div class="flex gap-2 items-center mt-2">
+                <button
+                    on:click=decrement
+                    class="hover:bg-yellow-400 rounded-md bg-yellow-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm"
+                >
+                    "-1"
+                </button>
+                <button
+                    on:click=increment
+                    class="hover:bg-green-400 rounded-md bg-green-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm"
+                >
+                    "+1"
+                </button>
+
+            </div>
+        </div>
     }
 }
 
@@ -57,7 +73,5 @@ fn NotFound() -> impl IntoView {
         resp.set_status(actix_web::http::StatusCode::NOT_FOUND);
     }
 
-    view! {
-        <h1>"Not Found"</h1>
-    }
+    view! { <h1>"Not Found"</h1> }
 }
