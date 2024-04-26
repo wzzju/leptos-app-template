@@ -29,29 +29,52 @@ pub fn App() -> impl IntoView {
 /// Renders the home page of your application.
 #[component]
 fn HomePage() -> impl IntoView {
-    let action = create_action(|_input: &()| async {
-        logging::log!("Get Chart");
-        let chart = crate::line_chart::chart();
-        logging::log!("Plot Chart");
-        let renderer = WasmRenderer::new(800, 600);
-        renderer.render("chart", &chart).unwrap();
+    let (show, set_show) = create_signal(false);
+    let action = create_action(move |draw: &bool| {
+        let draw = draw.clone();
+        set_show(draw);
+        async move {
+            if draw {
+                logging::log!("Get Chart");
+                let chart = crate::line_chart::chart();
+                logging::log!("Plot Chart");
+                let renderer = WasmRenderer::new(800, 600);
+                renderer.render("chart", &chart).unwrap();
+            }
+        }
     });
 
     view! {
         <div class="flex p-6 mx-auto justify-start space-x-6" id="main">
             <div id="left">
-                <button
-                    class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                    on:click=move |_| {
-                        action.dispatch(());
-                    }
-                >
+                <div class="flex space-y-6 flex-col">
+                    <button
+                        class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        on:click=move |_| {
+                            action.dispatch(true);
+                        }
+                    >
 
-                    "Show chart"
-                </button>
+                        "Show Chart"
+                    </button>
+                    <button
+                        class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        on:click=move |_| {
+                            action.dispatch(false);
+                        }
+                    >
+
+                        "Clear Chart"
+                    </button>
+                </div>
             </div>
             <div id="right">
-                <div id="chart"></div>
+                <Show
+                    when=move || show()
+                    fallback=|| view! { <b class="text-red-400">"Hello, charming!"</b> }
+                >
+                    <div id="chart"></div>
+                </Show>
             </div>
         </div>
     }
