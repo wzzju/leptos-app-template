@@ -1,3 +1,9 @@
+use charming::{
+    component::{Axis, Title},
+    element::AxisType,
+    series::Line,
+    Chart, WasmRenderer,
+};
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -28,30 +34,27 @@ pub fn App() -> impl IntoView {
 /// Renders the home page of your application.
 #[component]
 fn HomePage() -> impl IntoView {
-    // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(0);
-    let decrement = move |_| set_count.update(|value| *value -= 1);
-    let increment = move |_| set_count.update(|value| *value += 1);
+    let action = create_action(|_input: &()| async {
+        let chart = Chart::new()
+            .title(Title::new().text("Demo: Leptos + Charming"))
+            .x_axis(
+                Axis::new()
+                    .type_(AxisType::Category)
+                    .data(vec!["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]),
+            )
+            .y_axis(Axis::new().type_(AxisType::Value))
+            .series(Line::new().data(vec![150, 230, 224, 218, 135, 147, 260]));
+
+        let renderer = WasmRenderer::new(600, 400);
+        renderer.render("chart", &chart).unwrap();
+    });
 
     view! {
-        <div class="container flex items-center mt-20 flex-col">
-            <h1 class="text-blue-400">"Welcome to Leptos!"</h1>
-            <span class="text-pink-300">"Value: [" {move || count().to_string()} "]"</span>
-            <div class="flex gap-2 items-center mt-2">
-                <button
-                    on:click=decrement
-                    class="hover:bg-yellow-400 rounded-md bg-yellow-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm"
-                >
-                    "-1"
-                </button>
-                <button
-                    on:click=increment
-                    class="hover:bg-green-400 rounded-md bg-green-500 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm"
-                >
-                    "+1"
-                </button>
-
-            </div>
+        <div>
+            <button on:click=move |_| {
+                action.dispatch(());
+            }>"Show chart"</button>
+            <div id="chart"></div>
         </div>
     }
 }
