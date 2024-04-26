@@ -10,6 +10,7 @@ This is a template for use with the [Leptos](https://github.com/leptos-rs/leptos
 ## Run CMD
 
 ```shell
+npm install -D tailwindcss @tailwindcss/forms
 # generate css
 npx tailwindcss -i ./input.css -o ./style/output.css --watch
 # build ssr app

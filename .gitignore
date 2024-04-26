@@ -9,6 +9,7 @@ pkg
 
 # node e2e test tools and outputs
 node_modules/
+package.json
 package-lock.json
 test-results/
 end2end/playwright-report/
