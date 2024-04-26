@@ -12,8 +12,10 @@ This is a template for use with the [Leptos](https://github.com/leptos-rs/leptos
 ```shell
 # generate css
 npx tailwindcss -i ./input.css -o ./style/output.css --watch
-# build app
+# build ssr app
 cargo leptos watch
+# build csr app
+trunk serve --open --features csr
 ```
 
 ## Creating your template repo
