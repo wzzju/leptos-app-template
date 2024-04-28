@@ -20,6 +20,10 @@ charming = { version = "0.3.1", features = ["wasm"] }
 serde_json = "1.0.116"
 console_log = "1.0.0"
 log = "0.4.21"
+web-sys = { version = "0.3.69", features = ["FileList", "File"] }
+wasm-streams = "0.4.0"
+futures-util = "0.3.30"
+leptos-use = "0.10.9"
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]

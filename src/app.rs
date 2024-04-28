@@ -1,7 +1,11 @@
 use charming::WasmRenderer;
-use leptos::*;
+use futures_util::StreamExt;
+use leptos::{html::Textarea, *};
 use leptos_meta::*;
 use leptos_router::*;
+use leptos_use::use_resize_observer;
+use wasm_streams::ReadableStream;
+use web_sys::{js_sys::Uint8Array, wasm_bindgen::JsCast, File, FileList};
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -44,6 +48,30 @@ fn HomePage() -> impl IntoView {
         }
     });
 
+    let (content, set_content) = create_signal("no content".to_string());
+
+    let read_file = create_action(move |file: &File| {
+        logging::log!("File name: {}", file.name());
+        logging::log!("File last modified time: {}", file.last_modified());
+        let file = file.clone();
+        async move {
+            let js_stream = ReadableStream::from_raw(file.stream());
+            let mut stream = js_stream.into_stream();
+
+            while let Some(Ok(chunk)) = stream.next().await {
+                // web_sys::console::log_1(&chunk);
+                let content_u8: Uint8Array = chunk.into();
+                let content: Vec<u8> = content_u8.to_vec();
+                if let Ok(content) = String::from_utf8(content) {
+                    // logging::log!("{}", content);
+                    set_content(content);
+                }
+            }
+        }
+    });
+    let el = create_node_ref::<Textarea>();
+    use_resize_observer(el, move |_, _| {});
+
     view! {
         <div class="flex p-6 mx-auto justify-start space-x-6" id="main">
             <div id="left">
@@ -66,6 +94,30 @@ fn HomePage() -> impl IntoView {
 
                         "Clear Chart"
                     </button>
+                    <input
+                        class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
+                        type="file"
+                        name="file_upload"
+                        multiple
+                        on:input=move |ev| {
+                            let files: FileList = ev
+                                .target()
+                                .unwrap()
+                                .unchecked_ref::<web_sys::HtmlInputElement>()
+                                .files()
+                                .unwrap();
+                            let len = files.length();
+                            logging::log!("Files length: {}", len);
+                            for i in 0..len {
+                                if let Some(file) = files.get(i) {
+                                    read_file.dispatch(file);
+                                }
+                            }
+                        }
+                    />
+
+                    <p class="text-xs text-gray-400 mt-2">TXT, CSV and Excel are Allowed.</p>
+
                 </div>
             </div>
             <div id="right">
@@ -77,6 +129,12 @@ fn HomePage() -> impl IntoView {
                 </Show>
             </div>
         </div>
+        <textarea
+            node_ref=el
+            readonly
+            class="resize rounded-md p-8 w-[200px] h-[100px]"
+            prop:value=move || content.get()
+        ></textarea>
     }
 }
 
