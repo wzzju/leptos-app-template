@@ -1,21 +1,15 @@
 use charming::{
-    component::{Axis, Feature, Grid, Legend, SaveAsImage, Title, Toolbox},
+    component::{Axis, Feature, Grid, Legend, SaveAsImage, Title, Toolbox, ToolboxDataZoom},
     element::{AxisType, Tooltip, Trigger},
     series::Line,
     Chart,
 };
 
-pub fn chart() -> Chart {
+pub fn chart(legend: &[&str; 2], x: Vec<String>, y: &[Vec<f32>; 2]) -> Chart {
     Chart::new()
-        .title(Title::new().text("Stacked Line"))
+        .title(Title::new().text("Loss Comparison"))
         .tooltip(Tooltip::new().trigger(Trigger::Axis))
-        .legend(Legend::new().data(vec![
-            "Email",
-            "Union Ads",
-            "Video Ads",
-            "Direct",
-            "Search Engine",
-        ]))
+        .legend(Legend::new().data(legend.into()))
         .grid(
             Grid::new()
                 .left("3%")
@@ -23,42 +17,20 @@ pub fn chart() -> Chart {
                 .bottom("3%")
                 .contain_label(true),
         )
-        .toolbox(Toolbox::new().feature(Feature::new().save_as_image(SaveAsImage::new())))
+        .toolbox(
+            Toolbox::new().feature(
+                Feature::new()
+                    .save_as_image(SaveAsImage::new())
+                    .data_zoom(ToolboxDataZoom::new()),
+            ),
+        )
         .x_axis(
             Axis::new()
                 .type_(AxisType::Category)
                 .boundary_gap(false)
-                .data(vec!["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]),
+                .data(x),
         )
         .y_axis(Axis::new().type_(AxisType::Value))
-        .series(
-            Line::new()
-                .name("Email")
-                .stack("Total")
-                .data(vec![120, 132, 101, 134, 90, 230, 210]),
-        )
-        .series(
-            Line::new()
-                .name("Union Ads")
-                .stack("Total")
-                .data(vec![220, 182, 191, 234, 290, 330, 310]),
-        )
-        .series(
-            Line::new()
-                .name("Video Ads")
-                .stack("Total")
-                .data(vec![150, 232, 201, 154, 190, 330, 410]),
-        )
-        .series(
-            Line::new()
-                .name("Direct")
-                .stack("Total")
-                .data(vec![320, 332, 301, 334, 390, 330, 320]),
-        )
-        .series(
-            Line::new()
-                .name("Search Engine")
-                .stack("Total")
-                .data(vec![820, 932, 901, 934, 1290, 1330, 1320]),
-        )
+        .series(Line::new().name(legend[0]).data(y[0].clone()))
+        .series(Line::new().name(legend[1]).data(y[1].clone()))
 }
