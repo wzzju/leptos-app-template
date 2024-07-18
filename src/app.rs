@@ -9,7 +9,6 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Stylesheet id="leptos" href="/pkg/ai-chat.css"/>
-        // <Link rel="shortcut icon" type_="image/x-icon" href="/favicon.ico"/>
 
         // sets the document title
         <Title text="Welcome to AiChat"/>
