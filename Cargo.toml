@@ -21,6 +21,7 @@ dotenv = { version="0.15.0", optional = true }
 log = { version="0.4.22", optional = true }
 time = { version = "0.3.34", features = ["wasm-bindgen"] }
 leptonic = { git = "https://github.com/lpotthast/leptonic.git", branch = "main", features = ["nightly"]}
+leptos-use = "0.10.10"
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
@@ -35,6 +36,8 @@ ssr = [
   "leptos_meta/ssr",
   "leptos_router/ssr",
   "leptonic/ssr",
+  "leptos-use/ssr",
+  "leptos-use/actix",
 ]
 
 [build-dependencies]

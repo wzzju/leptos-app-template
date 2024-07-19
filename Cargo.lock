@@ -257,6 +257,7 @@ dependencies = [
  "leptonic",
  "leptonic-theme",
  "leptos",
+ "leptos-use",
  "leptos_actix",
  "leptos_meta",
  "leptos_router",
@@ -1619,6 +1620,7 @@ version = "0.10.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3272d90b77cdbb99e9060f90eb6f5738e56128b2f912db57a50efb006a26e262"
 dependencies = [
+ "actix-web",
  "async-trait",
  "cfg-if",
  "cookie 0.18.1",
@@ -1626,9 +1628,11 @@ dependencies = [
  "futures-util",
  "gloo-timers",
  "gloo-utils",
+ "http 0.2.12",
  "js-sys",
  "lazy_static",
  "leptos",
+ "leptos_actix",
  "num",
  "paste",
  "thiserror",
