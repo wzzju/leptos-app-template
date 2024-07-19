@@ -19,6 +19,8 @@ wasm-bindgen = "=0.2.92"
 env_logger = "0.11.3"
 dotenv = { version="0.15.0", optional = true }
 log = { version="0.4.22", optional = true }
+time = { version = "0.3.34", features = ["wasm-bindgen"] }
+leptonic = { git = "https://github.com/lpotthast/leptonic.git", branch = "main", features = ["nightly"]}
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
@@ -32,7 +34,11 @@ ssr = [
   "leptos/ssr",
   "leptos_meta/ssr",
   "leptos_router/ssr",
+  "leptonic/ssr",
 ]
+
+[build-dependencies]
+leptonic-theme = { git = "https://github.com/lpotthast/leptonic.git", branch = "main" }
 
 # Defines a size-optimized profile for the WASM bundle in release mode
 [profile.wasm-release]
@@ -52,6 +58,8 @@ site-root = "target/site"
 site-pkg-dir = "pkg"
 # [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
 tailwind-input-file = "style/main.css"
+style-file = "style/theme.scss"
+watch-additional-files = ["generated/"]
 # Assets source dir. All files found here will be copied and synchronized to site-root.
 # The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
 #
