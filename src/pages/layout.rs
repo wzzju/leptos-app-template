@@ -55,7 +55,7 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
     let logo = move || {
         view! {
             <Link href="">
-                <img src="/favicon.ico" id="logo" alt="Chat"/>
+                <img src="/images/cherry.png" id="logo" alt="Chat"/>
             </Link>
         }
     };

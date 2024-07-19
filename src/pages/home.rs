@@ -24,6 +24,9 @@ pub fn HomePage() -> impl IntoView {
                     "Click Me"
                 </button>
             </div>
+            <div class="flex gap-2 items-center mt-2">
+                <img src="images/cherry.png" id="pic" alt="picture"/>
+            </div>
         </div>
     }
 }

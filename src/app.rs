@@ -1,7 +1,7 @@
 use crate::pages::*;
 use leptonic::{components::prelude::*, prelude::*};
 use leptos::*;
-use leptos_meta::*;
+use leptos_meta::{provide_meta_context, Link, Stylesheet, Title};
 use leptos_router::*;
 use leptos_use::use_media_query;
 
@@ -67,6 +67,7 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Stylesheet id="leptos" href="/pkg/ai-chat.css"/>
+        <Link rel="icon" href="/images/favicon.ico"/>
 
         // sets the document title
         <Title text="Welcome to AiChat"/>
