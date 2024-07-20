@@ -250,6 +250,7 @@ version = "0.1.0"
 dependencies = [
  "actix-files",
  "actix-web",
+ "cfg-if",
  "console_error_panic_hook",
  "dotenv",
  "env_logger",
@@ -262,7 +263,9 @@ dependencies = [
  "leptos_meta",
  "leptos_router",
  "log",
+ "thiserror",
  "time",
+ "uuid",
  "wasm-bindgen",
 ]
 

@@ -1,7 +1,7 @@
+mod chat;
+mod error;
 mod home;
-mod layout;
-mod not_found;
 
+pub use chat::ChatPage;
+pub use error::{AppError, ErrorPage};
 pub use home::HomePage;
-pub use layout::Layout;
-pub use not_found::NotFound;

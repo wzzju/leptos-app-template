@@ -1,48 +1,25 @@
-use crate::app::{AppLayoutContext, APP_BAR_HEIGHT};
+use crate::app::{AppLayoutContext, AppRoutes, APP_BAR_HEIGHT};
 use leptonic::{components::prelude::*, prelude::*};
 use leptos::*;
 use leptos_router::*;
 
 #[component]
 #[allow(clippy::too_many_lines)]
-pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
-    let router_context = use_context::<RouterContext>();
-    let is_doc: Memo<bool> = create_memo(move |_| {
-        router_context
-            .as_ref()
-            .map(|router| router.pathname().get().starts_with("/doc"))
-            .unwrap_or(false)
-    });
-
+pub fn MainLayout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
     let app_layout_ctx = expect_context::<AppLayoutContext>();
     let AppLayoutContext {
         is_small,
         main_drawer_closed,
         set_main_drawer_closed,
-        doc_drawer_closed,
-        set_doc_drawer_closed,
+        side_drawer_closed,
+        set_side_drawer_closed,
         ..
     } = app_layout_ctx;
 
-    // Make sure the doc_drawer is closed whenever we leave a documentation route.
+    // Always close the side-drawer when the application is now small.
+    // Always open the side-drawer when the application is no longer small.
     create_effect(move |_| {
-        if !is_doc() {
-            set_doc_drawer_closed(true);
-        } else {
-            if !is_small() {
-                set_doc_drawer_closed(false);
-            }
-        }
-    });
-
-    // Always close the doc-drawer when the application is now small.
-    // Always open the doc-drawer when the application is no longer small.
-    create_effect(move |_| {
-        if is_small() {
-            set_doc_drawer_closed(true);
-        } else {
-            set_doc_drawer_closed(false);
-        }
+        set_side_drawer_closed(is_small());
     });
 
     // Always close the main-drawer when the application is no longer small.
@@ -54,8 +31,8 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
 
     let logo = move || {
         view! {
-            <Link href="">
-                <img src="/images/cherry.png" id="logo" alt="Chat"/>
+            <Link href=AppRoutes::Home>
+                <img src="/logo.png" id="logo" alt="Home"/>
             </Link>
         }
     };
@@ -64,24 +41,25 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
         <AppBar id="app-bar" height=APP_BAR_HEIGHT>
             <div id="app-bar-content">
                 <Stack id="left" orientation=StackOrientation::Horizontal spacing=Size::Zero>
-                    {move || match (is_doc(), is_small()) {
-                        (false, true) => logo().into_view(),
-                        (true, true) => {
+                    {move || match is_small() {
+                        true => {
                             view! {
                                 <Icon
                                     id="mobile-menu-trigger"
                                     icon=icondata::BsList
-                                    on:click=move |_| app_layout_ctx.toggle_doc_drawer()
+                                    on:click=move |_| app_layout_ctx.toggle_side_drawer()
                                 />
                                 {logo}
                             }
                                 .into_view()
                         }
-                        (_, false) => {
+                        false => {
                             view! {
                                 {logo}
-                                <Link href="/">
-                                    <H3 style="margin: 0 0 0 0.5em">"Home"</H3>
+                                <Link href=AppRoutes::Home>
+                                    <H3 style="margin: 0 0 0 0.5em; font-weight: bold; font-size: large">
+                                        "Ai-Chat"
+                                    </H3>
                                 </Link>
                             }
                                 .into_view()
@@ -104,7 +82,9 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
                         }
                         false => {
                             view! {
-                                <Link href="/change">"v0.6.0 (main)"</Link>
+                                <Link href="https://github.com/lpotthast/leptonic/releases">
+                                    "v0.6.0 (main)"
+                                </Link>
 
                                 <LinkExt
                                     href="https://github.com/lpotthast/leptonic"
@@ -134,8 +114,7 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
         <Box
             id="content"
             attr:aria-hidden=move || {
-                ((is_doc() && is_small() && !doc_drawer_closed()) || !main_drawer_closed())
-                    .to_string()
+                ((is_small() && !side_drawer_closed()) || !main_drawer_closed()).to_string()
             }
         >
 
@@ -161,6 +140,12 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
             >
                 <Stack orientation=StackOrientation::Vertical spacing=Size::Em(2.0) class="menu">
 
+                    <ThemeToggle
+                        off=LeptonicTheme::Light
+                        on=LeptonicTheme::Dark
+                        style="margin-right: 1em"
+                    />
+
                     <LinkExt
                         href="https://github.com/lpotthast/leptonic"
                         target=LinkExtTarget::Blank
@@ -169,13 +154,9 @@ pub fn Layout(#[prop(optional)] children: Option<Children>) -> impl IntoView {
                         <Icon id="github-icon" icon=icondata::BsGithub/>
                     </LinkExt>
 
-                    <ThemeToggle
-                        off=LeptonicTheme::Light
-                        on=LeptonicTheme::Dark
-                        style="margin-right: 1em"
-                    />
-
-                    "Currently - v0.6.0 (main)"
+                    <Link href="https://github.com/lpotthast/leptonic/releases">
+                        "v0.6.0 (main)"
+                    </Link>
                 </Stack>
             </Drawer>
         </Box>

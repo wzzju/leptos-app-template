@@ -1,11 +1,48 @@
+use crate::layouts::*;
 use crate::pages::*;
 use leptonic::{components::prelude::*, prelude::*};
 use leptos::*;
-use leptos_meta::{provide_meta_context, Link, Stylesheet, Title};
+use leptos_meta::{provide_meta_context, Link as MetaLink, Meta, Stylesheet, Title};
 use leptos_router::*;
 use leptos_use::use_media_query;
 
 pub const APP_BAR_HEIGHT: Height = Height::Em(3.5);
+pub const LEPTOS_OUTPUT_NAME: &str = env!("LEPTOS_OUTPUT_NAME");
+
+#[derive(Debug, Copy, Clone)]
+pub enum AppRoutes {
+    Home,
+    Chat,
+    Draw,
+    Compare,
+    NotFound,
+}
+
+impl AppRoutes {
+    pub const fn route(self) -> &'static str {
+        match self {
+            Self::Home => "",
+            Self::Chat => "chat",
+            Self::Draw => "draw",
+            Self::Compare => "compare",
+            Self::NotFound => "*any",
+        }
+    }
+}
+
+/// Required so that `Routes` variants can be used in `<Route path=Routes::Foo ...>` definitions.
+impl std::fmt::Display for AppRoutes {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.route())
+    }
+}
+
+/// Required so that `Routes` variants can be used in `<Link href=Routes::Foo ...>` definitions.
+impl ToHref for AppRoutes {
+    fn to_href(&self) -> Box<dyn Fn() -> String + '_> {
+        Box::new(move || format!("/{}", self.route()))
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct AppLayoutContext {
@@ -13,8 +50,8 @@ pub struct AppLayoutContext {
     pub is_medium: Signal<bool>,
     pub main_drawer_closed: ReadSignal<bool>,
     pub set_main_drawer_closed: WriteSignal<bool>,
-    pub doc_drawer_closed: ReadSignal<bool>,
-    pub set_doc_drawer_closed: WriteSignal<bool>,
+    pub side_drawer_closed: ReadSignal<bool>,
+    pub set_side_drawer_closed: WriteSignal<bool>,
 }
 
 impl AppLayoutContext {
@@ -23,21 +60,21 @@ impl AppLayoutContext {
         (self.set_main_drawer_closed)(true);
     }
 
-    pub fn close_doc_drawer(&self) {
-        (self.set_doc_drawer_closed)(true);
+    pub fn close_side_drawer(&self) {
+        (self.set_side_drawer_closed)(true);
     }
 
     pub fn toggle_main_drawer(&self) {
         let currently_closed = self.main_drawer_closed.get_untracked();
         (self.set_main_drawer_closed)(!currently_closed);
         if currently_closed {
-            self.close_doc_drawer();
+            self.close_side_drawer();
         }
     }
 
-    pub fn toggle_doc_drawer(&self) {
-        let currently_closed = self.doc_drawer_closed.get_untracked();
-        (self.set_doc_drawer_closed)(!currently_closed);
+    pub fn toggle_side_drawer(&self) {
+        let currently_closed = self.side_drawer_closed.get_untracked();
+        (self.set_side_drawer_closed)(!currently_closed);
         if currently_closed {
             self.close_main_drawer();
         }
@@ -53,34 +90,51 @@ pub fn App() -> impl IntoView {
     let is_medium = use_media_query("(max-width: 1200px)");
     // The main drawer is only used on mobile / small screens!.
     let (main_drawer_closed, set_main_drawer_closed) = create_signal(true);
-    let (doc_drawer_closed, set_doc_drawer_closed) = create_signal(false);
+    let (side_drawer_closed, set_side_drawer_closed) = create_signal(false);
 
     let app_layout_ctx = AppLayoutContext {
         is_small,
         is_medium,
         main_drawer_closed: main_drawer_closed,
         set_main_drawer_closed,
-        doc_drawer_closed: doc_drawer_closed,
-        set_doc_drawer_closed,
+        side_drawer_closed: side_drawer_closed,
+        set_side_drawer_closed,
     };
     provide_context(app_layout_ctx);
 
     view! {
-        <Stylesheet id="leptos" href="/pkg/ai-chat.css"/>
-        <Link rel="icon" href="/images/favicon.ico"/>
+        <Meta name="description" content="Ai-Chat"/>
+        <Meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <Meta name="theme-color" content="#e66956"/>
 
-        // sets the document title
-        <Title text="Welcome to AiChat"/>
+        <Stylesheet id="leptos" href=format!("/pkg/{LEPTOS_OUTPUT_NAME}.css")/>
 
-        // content for this welcome page
+        <MetaLink rel="icon" href="/assets/favicon.ico"/>
+        <MetaLink rel="apple-touch-icon" href="/logo.png"/>
+
+        <Title text="Welcome to Ai-Chat"/>
+
         <Root default_theme=LeptonicTheme::default()>
             <Router trailing_slash=TrailingSlash::Redirect>
-                <Layout>
+                <MainLayout>
                     <Routes>
-                        <Route path="" view=HomePage/>
-                        <Route path="/*any" view=NotFound/>
+                        <Route path="" view=|| view! { <SideLayout/> }>
+                            <Route path=AppRoutes::Home view=HomePage/>
+                            <Route path=AppRoutes::Chat view=ChatPage/>
+                            <Route path=AppRoutes::Draw view=HomePage/>
+                            <Route path=AppRoutes::Compare view=HomePage/>
+                        </Route>
+                        <Route
+                            path=AppRoutes::NotFound
+                            view=|| {
+                                let mut outside_errors = Errors::default();
+                                outside_errors.insert_with_default_key(AppError::NotFound);
+                                view! { <ErrorPage outside_errors/> }
+                            }
+                        />
+
                     </Routes>
-                </Layout>
+                </MainLayout>
             </Router>
         </Root>
     }

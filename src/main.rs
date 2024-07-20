@@ -25,14 +25,28 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // serve JS/WASM/CSS from `pkg`
             .service(Files::new("/pkg", format!("{site_root}/pkg")))
-            // serve images from `images`
-            .service(Files::new("/images", format!("{site_root}/images")))
+            // serve other assets from the `assets` directory
+            .service(Files::new("/assets", site_root))
+            // serve the logo from /logo.png
+            .service(logo)
             .leptos_routes(leptos_options.to_owned(), routes.to_owned(), App)
             .app_data(web::Data::new(leptos_options.to_owned()))
     })
     .bind(&addr)?
     .run()
     .await
+}
+
+#[cfg(feature = "ssr")]
+#[actix_web::get("logo.png")]
+async fn logo(
+    leptos_options: actix_web::web::Data<leptos::LeptosOptions>,
+) -> actix_web::Result<actix_files::NamedFile> {
+    let leptos_options = leptos_options.into_inner();
+    let site_root = &leptos_options.site_root;
+    Ok(actix_files::NamedFile::open(format!(
+        "{site_root}/logo.png"
+    ))?)
 }
 
 #[cfg(not(any(feature = "ssr", feature = "csr")))]
