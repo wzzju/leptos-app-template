@@ -73,3 +73,38 @@
     box-shadow: 0 0 0 3px rgb(248, 113, 113);
   }
 }
+
+[data-theme="light"] .chart-theme ._chartistry_grid_line_x {
+  stroke: #ccc;
+}
+
+[data-theme="light"] .chart-theme ._chartistry_grid_line_y {
+  stroke: #ccc;
+}
+
+[data-theme="light"] .chart-theme ._chartistry_axis_marker {
+  stroke: #2b303b;
+}
+
+[data-theme="dark"] .chart-theme {
+  background-color: #2b303b;
+  fill: #c0c5ce;
+  color: #c0c5ce;
+}
+
+[data-theme="dark"] .chart-theme ._chartistry_grid_line_x {
+  stroke: #505050;
+}
+
+[data-theme="dark"] .chart-theme ._chartistry_grid_line_y {
+  stroke: #505050;
+}
+
+[data-theme="dark"] .chart-theme ._chartistry_tooltip {
+  border: 1px solid #c0c5ce !important;
+  background-color: #222222 !important;
+}
+
+[data-theme="dark"] .chart-theme ._chartistry_rotated_label {
+  font-family: sans-serif;
+}

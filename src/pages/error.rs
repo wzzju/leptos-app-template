@@ -5,10 +5,12 @@ use leptos::*;
 use log::error;
 use thiserror::Error;
 
-cfg_if! { if #[cfg(feature="ssr")] {
-use leptos_actix::ResponseOptions;
-use actix_web::http::StatusCode;
-}}
+cfg_if! {
+    if #[cfg(feature = "ssr")] {
+        use leptos_actix::ResponseOptions;
+        use actix_web::http::StatusCode;
+    }
+}
 
 #[derive(Clone, Debug, Error)]
 pub enum AppError {
@@ -54,7 +56,7 @@ pub fn ErrorPage(
     // Only the response code for the first error is actually sent from the server
     // this may be customized by the specific application
     cfg_if! {
-        if #[cfg(feature="ssr")] {
+        if #[cfg(feature = "ssr")] {
             let response = use_context::<ResponseOptions>();
             if let Some(response) = response {
                 response.set_status(errors[0].status_code());

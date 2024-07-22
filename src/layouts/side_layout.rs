@@ -43,7 +43,7 @@ pub fn SideLayout() -> impl IntoView {
                     class="item"
                     on:click=move |_| close_side_drawer_on_mobile()
                 >
-                    "Chat"
+                    "New Chat"
                 </Link>
             </Stack>
         </DrawerSection>
@@ -59,18 +59,11 @@ pub fn SideLayout() -> impl IntoView {
 
             <Stack orientation=StackOrientation::Vertical spacing=Size::Zero class="link-stack">
                 <Link
-                    href=AppRoutes::Compare
-                    class="item"
-                    on:click=move |_| close_side_drawer_on_mobile()
-                >
-                    "Compare"
-                </Link>
-                <Link
                     href=AppRoutes::Draw
                     class="item"
                     on:click=move |_| close_side_drawer_on_mobile()
                 >
-                    "Draw"
+                    "Loss Plotter"
                 </Link>
             </Stack>
         </DrawerSection>
