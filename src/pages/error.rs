@@ -1,4 +1,5 @@
 use crate::app::AppRoutes;
+use crate::components::*;
 use cfg_if::cfg_if;
 use leptonic::components::prelude::*;
 use leptos::*;
@@ -77,6 +78,7 @@ pub fn ErrorPage(
     };
 
     view! {
+        <PageTitle text="Not Found"/>
         <Box class="container flex items-center flex-col err-page">
             <H1 id="error">
                 {match num_errors {

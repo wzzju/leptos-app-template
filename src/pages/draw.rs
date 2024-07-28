@@ -1,3 +1,4 @@
+use crate::components::*;
 use csv::ReaderBuilder;
 use leptonic::{components::prelude::*, prelude::*};
 use leptos::html::Div;
@@ -118,6 +119,7 @@ pub fn DrawPage() -> impl IntoView {
     });
 
     view! {
+        <PageTitle text="Draw Loss Curve"/>
         <div class="container items-center flex flex-col mt-10">
             <div
                 node_ref=drop_zone_el
