@@ -14,6 +14,7 @@ pub enum AppRoutes {
     Home,
     Chat,
     Draw,
+    Calculator,
     NotFound,
 }
 
@@ -23,6 +24,7 @@ impl AppRoutes {
             Self::Home => "",
             Self::Chat => "chat",
             Self::Draw => "draw",
+            Self::Calculator => "calculator",
             Self::NotFound => "*any",
         }
     }
@@ -120,6 +122,7 @@ pub fn App() -> impl IntoView {
                             <Route path=AppRoutes::Home view=HomePage/>
                             <Route path=AppRoutes::Chat view=ChatPage/>
                             <Route path=AppRoutes::Draw view=DrawPage/>
+                            <Route path=AppRoutes::Calculator view=CalculatorPage/>
                         </Route>
                         <Route
                             path=AppRoutes::NotFound

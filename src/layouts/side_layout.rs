@@ -65,6 +65,13 @@ pub fn SideLayout() -> impl IntoView {
                 >
                     "Loss Plotter"
                 </Link>
+                <Link
+                    href=AppRoutes::Calculator
+                    class="item"
+                    on:click=move |_| close_side_drawer_on_mobile()
+                >
+                    "Memory Calculator"
+                </Link>
             </Stack>
         </DrawerSection>
     };

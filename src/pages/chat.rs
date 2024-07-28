@@ -9,6 +9,7 @@ pub fn ChatPage() -> impl IntoView {
 
     view! {
         <PageTitle text="Chat With AI"/>
+
         <div class="container flex items-center mt-20 flex-col">
             <h1 class="text-4xl font-bold text-red-400 mb-4">"New Chat"</h1>
 

@@ -6,6 +6,7 @@ use leptos_meta::Title;
 pub fn HomePage() -> impl IntoView {
     view! {
         <Title text="Welcome to Ai-Chat"/>
+
         <div class="container flex items-center mt-20 flex-col">
             <h1 class="text-4xl font-bold text-red-400 mb-4">"Welcome to Ai-Chat!"</h1>
             <div class="flex gap-2 items-center mt-2">

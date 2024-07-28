@@ -79,6 +79,7 @@ pub fn ErrorPage(
 
     view! {
         <PageTitle text="Not Found"/>
+
         <Box class="container flex items-center flex-col err-page">
             <H1 id="error">
                 {match num_errors {
