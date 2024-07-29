@@ -12,9 +12,9 @@ pub const LEPTOS_OUTPUT_NAME: &str = env!("LEPTOS_OUTPUT_NAME");
 #[derive(Debug, Copy, Clone)]
 pub enum AppRoutes {
     Home,
-    Chat,
     Draw,
     Calculator,
+    Chat,
     NotFound,
 }
 
@@ -22,9 +22,9 @@ impl AppRoutes {
     pub const fn route(self) -> &'static str {
         match self {
             Self::Home => "",
-            Self::Chat => "chat",
             Self::Draw => "draw",
             Self::Calculator => "calculator",
+            Self::Chat => "chat",
             Self::NotFound => "*any",
         }
     }
@@ -103,7 +103,7 @@ pub fn App() -> impl IntoView {
     provide_context(app_layout_ctx);
 
     view! {
-        <Meta name="description" content="Ai-Chat"/>
+        <Meta name="description" content="{{project-name}}"/>
         <Meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <Meta name="theme-color" content="#e66956"/>
 
@@ -112,7 +112,7 @@ pub fn App() -> impl IntoView {
         <MetaLink rel="icon" href="/assets/favicon.ico"/>
         <MetaLink rel="apple-touch-icon" href="/logo.png"/>
 
-        <Title text="Welcome to Ai-Chat"/>
+        <Title text="Welcome to {{project-name}}"/>
 
         <Root default_theme=LeptonicTheme::default()>
             <Router trailing_slash=TrailingSlash::Redirect>
@@ -120,9 +120,9 @@ pub fn App() -> impl IntoView {
                     <Routes>
                         <Route path="" view=|| view! { <SideLayout/> }>
                             <Route path=AppRoutes::Home view=HomePage/>
-                            <Route path=AppRoutes::Chat view=ChatPage/>
                             <Route path=AppRoutes::Draw view=DrawPage/>
                             <Route path=AppRoutes::Calculator view=CalculatorPage/>
+                            <Route path=AppRoutes::Chat view=ChatPage/>
                         </Route>
                         <Route
                             path=AppRoutes::NotFound

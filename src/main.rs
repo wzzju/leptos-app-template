@@ -3,10 +3,10 @@
 async fn main() -> std::io::Result<()> {
     use actix_files::Files;
     use actix_web::*;
-    use ai_chat::app::*;
     use dotenv::dotenv;
     use leptos::*;
     use leptos_actix::{generate_route_list, LeptosRoutes};
+    use {{crate_name}}::app::*;
     use log::info;
 
     dotenv().ok();
@@ -62,7 +62,7 @@ pub fn main() {
     // a client-side main function is required for using `trunk serve`
     // prefer using `cargo leptos serve` instead
     // to run: `trunk serve --open --features csr`
-    use ai_chat::app::*;
+    use {{crate_name}}::app::*;
 
     console_error_panic_hook::set_once();
 
