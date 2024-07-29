@@ -31,26 +31,6 @@ pub fn SideLayout() -> impl IntoView {
             level=1
             header=move || {
                 view! {
-                    <Icon icon=icondata::BsChatSquare margin=Margin::Right(Size::Em(1.0))/>
-                    "Conversations"
-                }
-            }
-        >
-
-            <Stack orientation=StackOrientation::Vertical spacing=Size::Zero class="link-stack">
-                <Link
-                    href=AppRoutes::Chat
-                    class="item"
-                    on:click=move |_| close_side_drawer_on_mobile()
-                >
-                    "New Chat"
-                </Link>
-            </Stack>
-        </DrawerSection>
-        <DrawerSection
-            level=1
-            header=move || {
-                view! {
                     <Icon icon=icondata::BsTools margin=Margin::Right(Size::Em(1.0))/>
                     "Tools"
                 }
@@ -71,6 +51,27 @@ pub fn SideLayout() -> impl IntoView {
                     on:click=move |_| close_side_drawer_on_mobile()
                 >
                     "Memory Calculator"
+                </Link>
+            </Stack>
+        </DrawerSection>
+
+        <DrawerSection
+            level=1
+            header=move || {
+                view! {
+                    <Icon icon=icondata::BsChatSquare margin=Margin::Right(Size::Em(1.0))/>
+                    "Conversations"
+                }
+            }
+        >
+
+            <Stack orientation=StackOrientation::Vertical spacing=Size::Zero class="link-stack">
+                <Link
+                    href=AppRoutes::Chat
+                    class="item"
+                    on:click=move |_| close_side_drawer_on_mobile()
+                >
+                    "New Chat"
                 </Link>
             </Stack>
         </DrawerSection>
